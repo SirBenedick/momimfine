@@ -10,7 +10,7 @@ Always forget writing to yout parents/friends/loved ones, but dont mean to ignor
 2. ...
 
 
-### To-Do
+## To-Do
 * Download the whole file not just compressed image
 * add webserver for accesing the localy stored images through REST-API
 * webpage displays the newest images
