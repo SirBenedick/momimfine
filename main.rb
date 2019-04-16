@@ -32,9 +32,3 @@ end
 ## To-Do
 # Download File not just compressed image
 # Insert Download to Database
-#
-#
-# Module config.rb:
-# module Config
-#   TOKEN = "INSERT BOT TOKEN"
-# end
