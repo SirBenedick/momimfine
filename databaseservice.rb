@@ -5,7 +5,7 @@ module DatabaseService
 
         puts "Downloading: #{file_name}"
 
-        File.open("./images/#{file_name}", "wb") do |saved_file|
+        File.open("./mif-express/public/images/#{file_name}", "wb") do |saved_file|
             open(download_path, "rb") do |read_file|
               saved_file.write(read_file.read)
             end
