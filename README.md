@@ -11,9 +11,11 @@ Always forget writing to yout parents/friends/loved ones, but dont mean to ignor
 
 
 ## To-Do
+* Telegram bot in Node
 * Download the whole file not just compressed image
-* add webserver for accesing the localy stored images through REST-API
-* webpage displays the newest images
+* clean up frontend
+* simple installation
+* authentification
 
 
 ## Why
@@ -21,9 +23,6 @@ Project based learning seems to be the most efficent way of grasping a new topic
 During this Project we learned alot about the following:
 
 * HTTP Requests
-* AJAX
-* Cookies
-* Flask
-* Websockets
-* Javascript
-* Data manipulation in python
+* Node
+* ExpressJS
+* Webarchitecture
