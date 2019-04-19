@@ -3,16 +3,21 @@ const app = express();
 const port = 3000;
 
 const fs = require("fs");
-
+/** Starts Telegram Bot */
+const bot = require("./bot.js");
+bot.launch();
 
 app.get("/", (req, res) => res.send("Hello World!"));
-// app.get('/test', (req, res) => {
-//   res.send("<img src="")
-// });
+
+/** Return a JSON including an imageArray, this array includes every file of the directory ordered by the most recent modified files */
 app.get("/images", (req, res) => {
   var dir = "./public/images/";
+  var options = {
+    dotfiles: "deny",
+  };
+  var files = fs.readdirSync(dir);  
+  /** add filter for dot-files */
 
-  var files = fs.readdirSync(dir);
   files.sort(function(a, b) {
     return (
       fs.statSync(dir + b).mtime.getTime() -
@@ -22,12 +27,16 @@ app.get("/images", (req, res) => {
 
   var imageArray = [];
   files.forEach(element => {
-    imageArray.push({"name": element, "mtime": fs.statSync(dir + element).mtime.getTime()})
+    imageArray.push({
+      name: element,
+      mtime: fs.statSync(dir + element).mtime.getTime()
+    });
   });
-  var imageJSON = {imageArray};
+  var imageJSON = { imageArray };
   res.send(imageJSON);
 });
 
+/** Returns the file included in the public/images folder */
 app.get("/file/:name", function(req, res, next) {
   var options = {
     root: __dirname + "/public/images",
@@ -41,10 +50,17 @@ app.get("/file/:name", function(req, res, next) {
   var fileName = req.params.name;
   res.sendFile(fileName, options, function(err) {
     if (err) {
+      console.log(`Error sending file: ${fileName}`)
       next(err);
     } else {
       console.log("Sent:", fileName);
     }
   });
 });
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+
+app.get("/test", (req, res) => {
+  console.log(req)
+  res.send("test")
+});
+app.listen(port, () => console.log(`Example app listening on port http://localhost:${port}!`));
+

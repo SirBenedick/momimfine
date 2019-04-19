@@ -1,6 +1,8 @@
-mif-express/public
+package.json
+package-lock.json
+public
+config.js
 config.rb
-/images/
 # Logs
 logs
 *.log
