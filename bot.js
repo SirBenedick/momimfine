@@ -15,16 +15,31 @@ module.exports.launch = function() {
   // bot.hears('hi', (ctx) => ctx.reply('Hey there'))
   // bot.command('hipster', Telegraf.reply('λ'))
   bot.on("photo", ctx => {
-    console.log(ctx.message.photo[ctx.message.photo.length - 1].file_id);
+    console.log(
+      ctx.message.from.id +
+        "-" +
+        ctx.message.from.username +
+        ": " +
+        ctx.message.photo[ctx.message.photo.length - 1].file_id
+    );
     let fileId = ctx.message.photo[ctx.message.photo.length - 1].file_id;
-    telegram.getFileLink(fileId).then(downloadFile);
-    ctx.reply("Foto");
+    /**Fetches file_path aka. the file name, then passes the URL to download to downloadFile */
+    telegram.getFile(fileId).then(fileInfo => {
+      telegram
+        .getFileLink(fileId)
+        .then(data => downloadFile(fileInfo.file_path, data));
+    });
+    ctx.reply("Received Image");
   });
   bot.on("document", ctx => {
     console.log(ctx.message);
     let fileId = ctx.message.document.file_id;
-    telegram.getFileLink(fileId).then(downloadFile);
-    ctx.reply("Datei");
+    telegram.getFile(fileId).then(fileInfo => {
+      telegram
+        .getFileLink(fileId)
+        .then(downloadPath => downloadFile(fileInfo.file_path, downloadPath));
+    });
+    ctx.reply("Received File");
   });
   bot.on("message", ctx => {
     console.log(
@@ -36,25 +51,29 @@ module.exports.launch = function() {
     );
     return ctx.reply("Hello");
   });
+  console.log("Starting Bot");
   bot.launch();
 };
+/** this function should by async */
+function downloadFile(filePath, downloadPath) {
+  let fileName = filePath.split("/")[1]
+  console.log("Downloading:", fileName);
+  // console.log(downloadPath);
 
-function downloadFile(filePath) {
-  console.log(filePath);
-  //get filename dynamic
-  //set cb (callback) function
-  let dest = "./image.png";
+  let dest = `./public/images/${fileName}`;
   var file = fs.createWriteStream(dest);
   var request = https
-    .get(filePath, function(response) {
+    .get(downloadPath, function(response) {
       response.pipe(file);
       file.on("finish", function() {
-        file.close(cb); // close() is async, call cb after close completes.
+        file.close(); // close() is async, call cb (close(cb))after close completes.
+        console.log("Done downloading:", fileName);
       });
     })
     .on("error", function(err) {
       // Handle errors
       fs.unlink(dest); // Delete the file async. (But we don't check the result)
       if (cb) cb(err.message);
+      console.log("Error downloading:", fileName);
     });
 }
