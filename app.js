@@ -3,9 +3,11 @@ const app = express();
 const port = 3000;
 
 const fs = require("fs");
-/** Starts Telegram Bot */
-const bot = require("./bot.js");
-bot.launch();
+
+var forkWebserver = require('child_process').fork;
+var forkTelegram = require('child_process').fork;
+var childWebserver = forkWebserver('./webserver');
+var childTelegram = forkTelegram('./bot');
 
 app.get("/", (req, res) => res.send("Hello World!"));
 
